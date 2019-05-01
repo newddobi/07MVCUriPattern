@@ -63,15 +63,19 @@ public class ProductController {
 		
 		@RequestMapping("getProduct")
 		public String getProduct( @RequestParam("prodNo") int prodNo , Model model,
-														HttpServletResponse response) throws Exception {
+														HttpServletResponse response,
+														HttpServletRequest request) throws Exception {
 			
 			System.out.println("getProduct");
 			productService.increaseViewCount(prodNo);
 			Product product = productService.getProduct(prodNo);
 			
-			Cookie cookie = new Cookie(String.valueOf(prodNo), String.valueOf(prodNo));
+			Cookie cookie = new Cookie("history", String.valueOf(prodNo));
 			response.addCookie(cookie);
+		
+			System.out.println("쿠키넘겨주는 값"+String.valueOf(prodNo));
 			
+
 			model.addAttribute("product", product);
 			
 			return "forward:/product/readProduct.jsp";

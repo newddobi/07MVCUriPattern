@@ -17,11 +17,14 @@
 	response.setCharacterEncoding("euc-kr");
 	String history = null;
 	Cookie[] cookies = request.getCookies();
+
 	if (cookies!=null && cookies.length > 0) {
 		for (int i = 0; i < cookies.length; i++) {
 			Cookie cookie = cookies[i];
+			System.out.println("µé¾î¿È");
 			if (cookie.getName().equals("history")) {
 				history = cookie.getValue();
+				System.out.println("history :: "+history);
 			}
 		}
 		if (history != null) {
@@ -29,7 +32,7 @@
 			for (int i = 0; i < h.length; i++) {
 				if (!h[i].equals("null")) {
 %>
-<a href="/getProduct.do?prodNo=<%=h[i]%>&menu=search"
+<a href="/product/getProduct?prodNo=<%=h[i]%>&menu=search"
 	target="rightFrame"><%=h[i]%></a>
 <br>
 <%
