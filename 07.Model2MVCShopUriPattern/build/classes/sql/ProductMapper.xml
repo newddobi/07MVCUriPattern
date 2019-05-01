@@ -1,0 +1,190 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper
+		PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+		"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+		
+<mapper namespace="ProductMapper">
+
+	<resultMap id="productSelectMap" type="product">
+		<result property="manuDate"	column="manufacture_day" 		jdbcType="VARCHAR" />
+		<result property="price" 	column="price" 		jdbcType="NUMERIC" />
+		<result property="prodDetail" 				column="prod_detail" 					jdbcType="VARCHAR" />
+		<result property="prodName" 				column="prod_name" 					jdbcType="VARCHAR" />
+		<result property="prodNo" 			column="prod_no" 		jdbcType="NUMERIC" />
+		<result property="regDate" 				column="reg_date" 					jdbcType="DATE" />
+		<result property="proTranCode" 				column="tran_status_code" 					jdbcType="VARCHAR" />
+		<result property="viewCount" 		column="view_count" 			jdbcType="NUMERIC" />
+		<result property="cart" 		column="cart" 			jdbcType="NUMERIC" />
+	</resultMap>
+
+	<insert id="addProduct" parameterType="product">
+		INSERT 
+		INTO product ( prod_no, prod_name, prod_detail, manufacture_day, price, image_file, reg_date, view_count, cart)
+		VALUES(seq_product_prod_no.NEXTVAL, #{prodName}, #{prodDetail}, #{manuDate}, #{price}, #{fileName}, SYSDATE, 0, 0)
+	</insert>
+	
+	<select id="getProduct" parameterType="int" resultMap="productSelectMap">
+		SELECT  prod_no, prod_name, prod_detail, manufacture_day, price, image_file, reg_date, view_count
+		FROM product 
+		WHERE prod_no = #{value}	
+	</select>
+	
+	<update id="updateProduct" parameterType="product">
+		UPDATE product 
+		<set>
+		prod_name = #{prodName}, 
+		prod_detail = #{prodDetail}, 
+		manufacture_day= #{manuDate}, 
+		price= #{price}, 
+		image_file= #{fileName} 
+		</set>
+		WHERE prod_no= #{prodNo}	
+	</update>
+	
+	<select id="getProductList" parameterType="search" resultMap="productSelectMap">
+		SELECT *
+	  	FROM (	SELECT inner_table.* , ROWNUM AS row_seq
+	  					FROM		(	SELECT pro.prod_no, pro.prod_name, pro.price, pro.reg_date, pro.view_count, tran.tran_status_code
+											FROM transaction tran, product pro
+											<where>
+												<if test="true">
+													tran.prod_no(+) = pro.prod_no
+												</if>
+												<if test="searchCondition != null">
+													<choose>
+														<when test="searchCondition == 0 and searchKeyword != '' ">
+															AND pro.prod_no = #{searchKeyword}
+														</when>
+														<when test="searchCondition == 1 and searchKeyword != '' ">
+															AND LOWER(pro.prod_name) LIKE '%'||#{searchKeyword}||'%'
+														</when>
+														<when test="searchCondition == 2 and searchKeyword != '' ">
+															AND pro.price = #{searchKeyword}
+														</when>
+														<when test="searchCondition == 3">	
+															AND tran.tran_status_code = 2
+														</when>
+														<when test="searchCondition == 4">
+															AND tran.tran_status_code = 1
+														</when>
+														<when test="searchCondition == 5">
+															AND tran.tran_status_code = 3
+														</when>
+													</choose>
+												</if>
+												<if test="cart">
+													AND cart = 1
+												</if>
+												<if test="searchMax !=null and searchMin != null and searchMax != '' and searchMin != ''">
+													<choose>
+														<when test="searchMin != null">
+															AND pro.price <![CDATA[ <= ]]> #{searchMax}
+														</when>
+														<when test="searchMax != null">
+															AND pro.price <![CDATA[ >= ]]> #{searchMix}
+														</when>
+														<otherwise>
+															AND pro.price BETWEEN #{searchMin} AND #{searchMax}
+														</otherwise>
+													</choose>
+												</if>
+											</where>
+											<if test="orderCondition != null and orderCondition != ''">
+												<choose>
+													<when test="orderCondition == 1">
+														ORDER BY reg_date DESC
+													</when>
+													<when test="orderCondition == 2">
+														ORDER BY pro.price
+													</when>
+													<when test="orderCondition == 3">
+														ORDER BY pro.price DESC
+													</when>
+													<when test="orderCondition == 4">
+														ORDER BY pro.view_count DESC
+													</when>
+												</choose>
+											</if> ) inner_table
+						WHERE ROWNUM &lt;= #{endRowNum} )
+		WHERE row_seq BETWEEN #{startRowNum} AND #{endRowNum} 
+	</select>
+	
+	<select id="getTotalCount" parameterType="search" resultType="int">
+		SELECT COUNT(*)
+		FROM ( SELECT pro.prod_no, pro.prod_name, pro.price, pro.reg_date, pro.view_count, tran.tran_status_code
+							FROM transaction tran, product pro
+											<where>
+												<if test="true">
+													tran.prod_no(+) = pro.prod_no
+												</if>
+												<if test="searchCondition != null">
+													<choose>
+														<when test="searchCondition == 0 and searchKeyword !='' ">
+															AND pro.prod_no = #{searchKeyword}
+														</when>
+														<when test="searchCondition == 1 and searchKeyword != '' ">
+															AND LOWER(pro.prod_name) LIKE '%'||#{searchKeyword}||'%'
+														</when>
+														<when test="searchCondition == 2 and searchKeyword != '' ">
+															AND pro.price = #{searchKeyword}
+														</when>
+														<when test="searchCondition == 3">	
+															AND tran.tran_status_code = 2
+														</when>
+														<when test="searchCondition == 4">
+															AND tran.tran_status_code = 1
+														</when>
+														<when test="searchCondition == 5">
+															AND tran.tran_status_code = 3
+														</when>
+													</choose>
+												</if>
+												<if test="cart">
+													AND cart = 1
+												</if>
+												<if test="searchMax !=null and searchMin != null and searchMax != '' and searchMin != ''">
+													<choose>
+														<when test="searchMin != null">
+															AND pro.price <![CDATA[ <= ]]> #{searchMax}
+														</when>
+														<when test="searchMax != null">
+															AND pro.price <![CDATA[ >= ]]> #{searchMix}
+														</when>
+														<otherwise>
+															AND pro.price BETWEEN #{searchMin} AND #{searchMax}
+														</otherwise>
+													</choose>
+												</if>
+											</where>
+											<if test="orderCondition != null and orderCondition != ''">
+												<choose>
+													<when test="orderCondition == 1">
+														ORDER BY reg_date DESC
+													</when>
+													<when test="orderCondition == 2">
+														ORDER BY pro.price
+													</when>
+													<when test="orderCondition == 3">
+														ORDER BY pro.price DESC
+													</when>
+													<when test="orderCondition == 4">
+														ORDER BY pro.view_count DESC
+													</when>
+												</choose>
+											</if> ) countTable
+	</select>
+	
+	<update id="increaseViewCount" parameterType="int">
+		UPDATE product
+		SET view_count = NVL(view_count,0)+1
+		WHERE prod_no = #{value}
+	</update>
+	
+	<update id="addCart" parameterType="Integer">
+		UPDATE product
+		SET cart = 1
+		WHERE prod_no = #{value}
+	</update>
+		
+</mapper>
