@@ -21,7 +21,7 @@
 	if (cookies!=null && cookies.length > 0) {
 		for (int i = 0; i < cookies.length; i++) {
 			Cookie cookie = cookies[i];
-			System.out.println("µé¾î¿È");
+			
 			if (cookie.getName().equals("history")) {
 				history = cookie.getValue();
 				System.out.println("history :: "+history);

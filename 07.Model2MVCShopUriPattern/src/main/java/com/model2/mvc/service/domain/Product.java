@@ -34,7 +34,7 @@ public class Product {
 		return manuDate;
 	}
 	public void setManuDate(String manuDate) {
-		this.manuDate = manuDate;
+		this.manuDate = manuDate.replaceAll("-", "");
 	}
 	public int getPrice() {
 		return price;

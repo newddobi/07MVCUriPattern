@@ -48,13 +48,13 @@ public class PurchaseController {
 	
 	@RequestMapping("addPurchaseView")
 	public String addPurchaseView(@RequestParam("prodNo") int prodNo,
-																Model model) throws Exception{
+																Map<String, Product> map) throws Exception{
 		
 		System.out.println("addPurchaseView");
 		
 		Product product = productService.getProduct(prodNo);
 		
-		model.addAttribute("product", product);
+		map.put("product", product);
 		
 		return "forward:/purchase/addPurchaseView.jsp";
 	}
@@ -113,10 +113,11 @@ public class PurchaseController {
 	}
 	
 	@RequestMapping("updatePurchase")
-	public String updatePurchase(@ModelAttribute("purchase") Purchase purchase) throws Exception {
+	public String updatePurchase(@ModelAttribute("purchase") Purchase purchase,
+															@RequestParam("tranNo") int tranNo) throws Exception {
 		
 		System.out.println("updatePurchase");
-		
+		purchase.setTranNo(tranNo);
 		purchaseService.updatePurchase(purchase);
 		
 		return "redirect:/purchase/getPurchase?tranNo="+purchase.getTranNo();

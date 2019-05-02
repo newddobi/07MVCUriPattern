@@ -11,9 +11,11 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.ModelAndView;
 
 import com.model2.mvc.common.Page;
 import com.model2.mvc.common.Search;
@@ -42,70 +44,84 @@ public class ProductController {
 		int pageSize;
 		
 		@RequestMapping("addProductView")
-		public String addProductView() throws Exception {
+		public ModelAndView addProductView() throws Exception {
 
 			System.out.println("addProductView");
 			
-			return "redirect:/product/addProductView.jsp";
+			ModelAndView modelAndView = new ModelAndView();
+			modelAndView.setViewName("redirect:/product/addProductView.jsp");
+			
+			return modelAndView;
 		}
 		
 		@RequestMapping("addProduct")
-		public String addProduct( @ModelAttribute("product") Product product ) throws Exception {
+		public ModelAndView addProduct( @ModelAttribute("product") Product product ) throws Exception {
 
 			System.out.println("addProduct");
 			
-			product.setManuDate(product.getManuDate().replaceAll("-", ""));
-			
 			productService.addProduct(product);
 			
-			return "forward:/product/addProduct.jsp";
+			ModelAndView modelAndView = new ModelAndView();
+			modelAndView.setViewName("forward:/product/addProduct.jsp");
+			
+			return modelAndView;
 		}
 		
 		@RequestMapping("getProduct")
-		public String getProduct( @RequestParam("prodNo") int prodNo , Model model,
-														HttpServletResponse response,
-														HttpServletRequest request) throws Exception {
+		public ModelAndView getProduct( @RequestParam("prodNo") int prodNo ,
+														@CookieValue(value="history", required=false) Cookie cookie,
+														HttpServletResponse response) throws Exception {
 			
 			System.out.println("getProduct");
 			productService.increaseViewCount(prodNo);
 			Product product = productService.getProduct(prodNo);
 			
-			Cookie cookie = new Cookie("history", String.valueOf(prodNo));
-			response.addCookie(cookie);
-		
-			System.out.println("쿠키넘겨주는 값"+String.valueOf(prodNo));
-			
+			if(cookie != null) {
+				cookie.setValue(cookie.getValue()+","+Integer.toString(prodNo));
+			}else {
+				cookie = new Cookie("history", Integer.toString(prodNo));
+			}
 
-			model.addAttribute("product", product);
+			cookie.setPath("/");
+			cookie.setMaxAge(3600);
+			response.addCookie(cookie);						
 			
-			return "forward:/product/readProduct.jsp";
+			ModelAndView modelAndView = new ModelAndView();
+			modelAndView.setViewName("forward:/product/readProduct.jsp");
+			modelAndView.addObject("product", product);
+			return modelAndView;
 		}
 		
 		@RequestMapping("/updateProductView")
-		public String updateProductView( @RequestParam("prodNo") int prodNo , Model model ) throws Exception{
+		public ModelAndView updateProductView( @RequestParam("prodNo") int prodNo ) throws Exception{
 
 			System.out.println("updateProductView");
 			
 			Product product = productService.getProduct(prodNo);
 			
-			model.addAttribute("product", product);
+			ModelAndView modelAndView = new ModelAndView();
+			modelAndView.addObject("product", product);
+			modelAndView.setViewName("forward:/product/updateProduct.jsp");
 			
-			return "forward:/product/updateProduct.jsp";
+			return modelAndView;
 		}
 		
 		@RequestMapping("updateProduct")
-		public String updateProduct( @ModelAttribute("product") Product product , Model model ) throws Exception{
+		public ModelAndView updateProduct( @ModelAttribute("product") Product product ) throws Exception{
 
 			System.out.println("updateProduct");
 
 			productService.updateProduct(product);
 			
-			return "redirect:/product/getProduct?prodNo="+product.getProdNo();
+			ModelAndView modelAndView = new ModelAndView();
+			modelAndView.setViewName("redirect:/product/getProduct?prodNo="+product.getProdNo());
+			
+			return modelAndView;
 		}
 		
 		@RequestMapping("listProduct")
-		public String listProduct( @ModelAttribute("search") Search search ,
-													Model model, HttpServletRequest request) throws Exception{
+		public ModelAndView listProduct( @ModelAttribute("search") Search search ,
+													 HttpServletRequest request) throws Exception{
 			
 			System.out.println("listProduct");
 			
@@ -140,21 +156,27 @@ public class ProductController {
 			System.out.println(resultPage);
 			
 			// Model 과 View 연결
-			model.addAttribute("list", map.get("list"));
-			model.addAttribute("resultPage", resultPage);
-			model.addAttribute("search", search);
 			
-			return "forward:/product/listProduct.jsp";
+			ModelAndView modelAndView = new ModelAndView();
+			modelAndView.setViewName("forward:/product/listProduct.jsp");
+			modelAndView.addObject("list", map.get("list"));
+			modelAndView.addObject("resultPage", resultPage);
+			modelAndView.addObject("search", search);
+			
+			return modelAndView;
 		}
 		
 		@RequestMapping("addCart")
-		public String addCart(@RequestParam("prodNo") int prodNo) throws Exception{
+		public ModelAndView addCart(@RequestParam("prodNo") int prodNo) throws Exception{
 			
 			System.out.println("addCart");
 			
 			productService.addCart(prodNo);
 			
-			return "forward:/product/afterCart.jsp";
+			ModelAndView modelAndView = new ModelAndView();
+			modelAndView.setViewName("forward:/product/afterCart.jsp");
+			
+			return modelAndView;
 		}
 		
 }//end of class
