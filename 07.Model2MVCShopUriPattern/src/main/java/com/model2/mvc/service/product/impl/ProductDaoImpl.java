@@ -62,4 +62,10 @@ public class ProductDaoImpl implements ProductDao{
 		sqlSession.update("ProductMapper.addCart", prodNo);
 	}
 
+	@Override
+	public void minusAmount(Product product) throws Exception {
+		sqlSession.update("ProductMapper.minusAmount", product);
+		
+	}
+
 }

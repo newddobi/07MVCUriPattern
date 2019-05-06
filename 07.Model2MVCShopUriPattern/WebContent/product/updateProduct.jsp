@@ -17,6 +17,7 @@ function fncAddProduct(){
 	var detail = document.detailForm.prodDetail.value;
 	var manuDate = document.detailForm.manuDate.value;
 	var price = document.detailForm.price.value;
+	var amount = document.detailForm.amount.value;
 
 	if(name == null || name.length<1){
 		alert("상품명은 반드시 입력하여야 합니다.");
@@ -33,6 +34,9 @@ function fncAddProduct(){
 	if(price == null || price.length<1){
 		alert("가격은 반드시 입력하셔야 합니다.");
 		return;
+	}
+	if(amount == null || amount.length<1){
+		alert("수량은 반드시 입력하셔야 합니다.")
 	}
 
 	document.detailForm.action='/product/updateProduct';
@@ -132,6 +136,20 @@ function resetData(){
 			<input type="text" name="price" 	class="ct_input_g" 
 						style="width: 100px; height: 19px" maxLength="10"
 							value="${product.price }">&nbsp;원
+		</td>
+	</tr>
+	<tr>
+		<td height="1" colspan="3" bgcolor="D6D6D6"></td>
+	</tr>
+	<tr>
+		<td width="104" class="ct_write">
+			수량 <img src="/images/ct_icon_red.gif" width="3" height="3" align="absmiddle"/>
+		</td>
+		<td bgcolor="D6D6D6" width="1"></td>
+		<td class="ct_write01">
+			<input type="text" name="amount" 	class="ct_input_g" 
+						style="width: 100px; height: 19px" maxLength="10"
+							value="${product.amount }">&nbsp;개
 		</td>
 	</tr>
 	<tr>

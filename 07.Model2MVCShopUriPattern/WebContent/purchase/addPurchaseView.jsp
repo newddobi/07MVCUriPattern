@@ -5,17 +5,41 @@
 
 <link rel="stylesheet" href="/css/admin.css" type="text/css">
 
-<title>Insert title here</title>
+<title>상품 구매</title>
 
 <script type="text/javascript" src="../javascript/calendar.js">
 </script>
 
 <script type="text/javascript">
-<!--
+
 function fncAddPurchase() {
+	
+	var tranAmount = document.addPurchase.tranAmount.value;
+	var receiverName = document.addPurchase.receiverName.value;
+	var receiverPhone = document.addPurchase.receiverPhone.value;
+	var divyAddr = document.addPurchase.divyAddr.value;
+	
+	if(tranAmount == null || tranAmount.length<1 || tranAmount > ${product.amount} ){
+		alert("수량은 반드시 입력하고 재고 수보다 많으면 안됩니다.");
+		return;
+	}
+	if(receiverName == null || receiverName.length<1){
+		alert("이름은 반드시 입력하여야 합니다.");
+		return;
+	}
+	if(receiverPhone == null || receiverPhone.length<1){
+		alert("전화번호는 반드시 입력하여야 합니다.");
+		return;
+	}
+	if(divyAddr == null || divyAddr.length<1){
+		alert("주소는 반드시 입력하여야 합니다.");
+		return;
+	}
+
+	
 	document.addPurchase.submit();
 }
--->
+
 </script>
 </head>
 
@@ -31,7 +55,7 @@ function fncAddPurchase() {
 		<td background="/images/ct_ttl_img02.gif" width="100%" style="padding-left: 10px;">
 			<table width="100%" border="0" cellspacing="0" cellpadding="0">
 				<tr>
-					<td width="93%" class="ct_ttl01">상품상세조회</td>
+					<td width="93%" class="ct_ttl01">상품구매 페이지</td>
 					<td width="20%" align="right">&nbsp;</td>
 				</tr>
 			</table>
@@ -55,8 +79,9 @@ function fncAddPurchase() {
 		<td class="ct_write01" width="299">
 			<table width="100%" border="0" cellspacing="0" cellpadding="0">
 				<tr>
-					<td width="105">${product.prodNo}</td>
+					<td width="105">${product.prodNo}
 					<input type="hidden" name="prodNo" value="${product.prodNo}"/>
+					</td>
 				</tr>
 			</table>
 		</td>
@@ -113,12 +138,26 @@ function fncAddPurchase() {
 			구매자아이디 <img 	src="/images/ct_icon_red.gif" width="3" height="3" align="absmiddle"/>
 		</td>
 		<td bgcolor="D6D6D6" width="1"></td>
-		<td class="ct_write01">${user.userId}</td>
-		<input type="hidden" name="buyerId" value="${user.userId}"/>
+		<td class="ct_write01">${user.userId}
+			<input type="hidden" name="buyerId" value="${user.userId}"/>
+		</td>
 	</tr>
 	<tr>
 		<td height="1" colspan="3" bgcolor="D6D6D6"></td>
 	</tr>
+	
+	<tr>
+		<td width="104" class="ct_write">구매수량</td>
+		<td bgcolor="D6D6D6" width="1"></td>
+		<td class="ct_write01">
+			<input type="text" name="tranAmount" class="ct_input_g" 
+						style="width: 100px; height: 19px" maxLength="20" value="" />
+		</td>
+	</tr>
+	<tr>
+		<td height="1" colspan="3" bgcolor="D6D6D6"></td>
+	</tr>
+	
 	<tr>
 		<td width="104" class="ct_write">구매방법</td>
 		<td bgcolor="D6D6D6" width="1"></td>

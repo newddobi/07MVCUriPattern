@@ -19,4 +19,6 @@ public interface ProductService {
 	
 	public void addCart(int prodNo) throws Exception;
 	
+	public void minusAmount(Product product) throws Exception;
+	
 }

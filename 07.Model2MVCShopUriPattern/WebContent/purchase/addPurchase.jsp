@@ -4,17 +4,22 @@
 
 <html>
 <head>
-<title>Insert title here</title>
+<title>구매완료 페이지</title>
 </head>
 
 <body>
 
 
-다음과 같이 구매가 되었습니다.
+구매가 완료되었습니다.
 <table border=1>
 	<tr>
 		<td>물품번호</td>
 		<td>${purchase.purchaseProd.prodNo}</td>
+		<td></td>
+	</tr>
+	<tr>
+		<td>수량</td>
+		<td>${purchase.tranAmount}</td>
 		<td></td>
 	</tr>
 	<tr>

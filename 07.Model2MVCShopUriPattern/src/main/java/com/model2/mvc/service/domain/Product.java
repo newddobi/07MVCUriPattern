@@ -9,11 +9,14 @@ public class Product {
 	private int price;
 	private String prodDetail;
 	private String prodName;
+	
 	private int prodNo;
 	private Date regDate;
 	private String proTranCode;
 	private int viewCount;
 	private int cart;
+	
+	private int amount;
 	
 	public Product(){
 	}
@@ -83,11 +86,21 @@ public class Product {
 		this.cart = cart;
 	}
 
+	
+	public int getAmount() {
+		return amount;
+	}
+
+	public void setAmount(int amount) {
+		this.amount = amount;
+	}
+
 	@Override
 	public String toString() {
 		return "Product [fileName=" + fileName + ", manuDate=" + manuDate + ", price=" + price + ", prodDetail="
 				+ prodDetail + ", prodName=" + prodName + ", prodNo=" + prodNo + ", regDate=" + regDate
-				+ ", proTranCode=" + proTranCode + ", viewCount=" + viewCount + ", cart=" + cart + "]";
+				+ ", proTranCode=" + proTranCode + ", viewCount=" + viewCount + ", cart=" + cart + ", amount=" + amount
+				+ "]";
 	}
 
 

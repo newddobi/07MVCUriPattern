@@ -20,6 +20,7 @@ import org.springframework.web.servlet.ModelAndView;
 import com.model2.mvc.common.Page;
 import com.model2.mvc.common.Search;
 import com.model2.mvc.service.domain.Product;
+import com.model2.mvc.service.domain.User;
 import com.model2.mvc.service.product.ProductService;
 
 
@@ -107,7 +108,7 @@ public class ProductController {
 		}
 		
 		@RequestMapping("updateProduct")
-		public ModelAndView updateProduct( @ModelAttribute("product") Product product ) throws Exception{
+		public ModelAndView updateProduct( @ModelAttribute("product") Product product) throws Exception{
 
 			System.out.println("updateProduct");
 
@@ -121,7 +122,7 @@ public class ProductController {
 		
 		@RequestMapping("listProduct")
 		public ModelAndView listProduct( @ModelAttribute("search") Search search ,
-													 HttpServletRequest request) throws Exception{
+											HttpServletRequest request) throws Exception{
 			
 			System.out.println("listProduct");
 			

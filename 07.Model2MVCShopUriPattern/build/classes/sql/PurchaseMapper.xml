@@ -20,14 +20,16 @@
 		<result property="tranCode" 		column="tran_status_code" 			jdbcType="VARCHAR" />
 		<result property="orderDate" 		column="order_date" 			jdbcType="DATE" />
 		<result property="divyDate" 		column="dlvy_date" 			jdbcType="DATE" />
+		<result property="amount" 		column="amount" 			jdbcType="NUMERIC" />
+		
 	</resultMap>
 	
 
 	
 	<insert id="addPurchase" parameterType="purchase">
 		INSERT
-		INTO transaction ( tran_no, prod_no, buyer_id, payment_option, receiver_name, receiver_phone, dlvy_addr, dlvy_request, tran_status_code, order_date, dlvy_date)
-		VALUES(seq_transaction_tran_no.NEXTVAL, #{purchaseProd.prodNo}, #{buyer.userId}, #{paymentOption}, #{receiverName}, #{receiverPhone}, #{divyAddr}, #{divyRequest}, 3, SYSDATE, #{divyDate})
+		INTO transaction ( tran_no, prod_no, buyer_id, payment_option, receiver_name, receiver_phone, dlvy_addr, dlvy_request, tran_status_code, order_date, dlvy_date, tran_amount)
+		VALUES(seq_transaction_tran_no.NEXTVAL, #{purchaseProd.prodNo}, #{buyer.userId}, #{paymentOption}, #{receiverName}, #{receiverPhone}, #{divyAddr}, #{divyRequest}, 3, SYSDATE, #{divyDate}, #{tranAmount})
 	</insert>
 	
 	<select id="getPurchase" parameterType="int" resultMap="purchaseSelectMap">

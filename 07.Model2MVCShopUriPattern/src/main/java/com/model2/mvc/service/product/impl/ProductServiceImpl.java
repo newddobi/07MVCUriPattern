@@ -66,4 +66,9 @@ public class ProductServiceImpl implements ProductService{
 		productDao.addCart(prodNo);
 	}
 
+	@Override
+	public void minusAmount(Product product) throws Exception {
+		productDao.minusAmount(product);
+	}
+
 }

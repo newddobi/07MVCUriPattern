@@ -130,13 +130,15 @@ function fncAddCart(prodNo){
 		<td colspan="11" >전체 ${resultPage.totalCount } 건수, 현재  ${resultPage.currentPage } 페이지</td>
 	</tr>
 	<tr>
-		<td class="ct_list_b" width="100">No</td>
+		<td class="ct_list_b" width="80">No</td>
 		<td class="ct_line02"></td>
-		<td class="ct_list_b" width="150">상품명</td>
+		<td class="ct_list_b" width="80">상품번호</td>
 		<td class="ct_line02"></td>
-		<td class="ct_list_b" width="150">가격</td>
+		<td class="ct_list_b" width="200">상품명</td>
 		<td class="ct_line02"></td>
-		<td class="ct_list_b">상품번호</td>	
+		<td class="ct_list_b">가격</td>
+		<td class="ct_line02"></td>
+		<td class="ct_list_b">재고</td>		
 		<td class="ct_line02"></td>
 		<td class="ct_list_b">현재상태</td>	
 	</tr>
@@ -149,61 +151,39 @@ function fncAddCart(prodNo){
 		<tr class="ct_list_pop">
 			<td align="center">${ i }</td>
 			<td></td>			
-			<td align="left">
-			  <c:if test="${product.proTranCode == '4' || product.proTranCode == null}">
+			<td align="center">${product.prodNo}</td>
+			<td></td>
+			<td align="center">
+			  <c:if test="${product.amount != 0}">
 				<c:choose>
 					<c:when test="${param.menu eq 'manage'}">
-						<a href="/product/updateProductView?prodNo=${product.prodNo}&menu=manage">	
+						<a href="/product/updateProductView?prodNo=${product.prodNo}&menu=manage">
 					</c:when>
 					<c:otherwise>
-						<a href="/product/getProduct?prodNo=${product.prodNo }&menu=search">			
+						<a href="/product/getProduct?prodNo=${product.prodNo }&menu=search">
 					</c:otherwise>
 				</c:choose>
 			  </c:if>
 				${product.prodName}</a>
 			</td>
 			<td></td>
-			<td align="left">${product.price}</td>
+			<td align="center">${product.price}</td>
 			<td></td>
-			<td align="left">${product.prodNo}</td>
+
+			<td align="center">${product.amount}</td>
 			<td></td>
-			<td align="left">
-			<c:choose>
-				<c:when test="${user.userId == 'admin' }">
-					<c:choose>
-						<c:when test="${product.proTranCode eq '4' || product.proTranCode == null}">
-							판매중
+			<td align="center">
+				<c:choose>
+					<c:when test="${product.amount != 0}">
+						판매중&nbsp;
+							<c:if test="${user.userId != 'admin' }">
+								<a href="javascript:fncAddCart(${product.prodNo});">장바구니 담기</a>
+							</c:if>
 						</c:when>
-						<c:when test="${product.proTranCode eq '3' || product.proTranCode eq '2'}">
-							구매완료	
-							<c:choose>
-								<c:when test="${product.proTranCode eq '3' && user.userId eq 'admin' && param.menu eq 'manage'}">
-										&nbsp;<a href="/purchase/updateTranCode?prodNo=${product.prodNo}&tranCode=${product.proTranCode}">배송하기</a>
-								</c:when>
-								<c:when test="${product.proTranCode eq '2' && user.userId eq 'admin'}">
-										&nbsp;배송중
-								</c:when>
-							</c:choose>
-						</c:when>
-						<c:when test="${product.proTranCode eq '1' }">
-							배송완료
-						</c:when>
-					</c:choose>	
-				</c:when>
-				<c:when test="${user.userId != 'admin' }">
-					<c:choose>
-						<c:when test="${product.proTranCode eq '4' || product.proTranCode == null}">
-							판매중
-							&nbsp;<a href="javascript:fncAddCart(${product.prodNo});">장바구니 담기</a>
-						</c:when>
-						<c:otherwise>
-							재고없음
-						</c:otherwise>
-					</c:choose>
-				</c:when>
-			
-			</c:choose>
-				
+					<c:otherwise>
+						재고없음
+					</c:otherwise>	
+				</c:choose>
 			</td>	
 		</tr>
 		<tr>

@@ -48,7 +48,7 @@ public class PurchaseController {
 	
 	@RequestMapping("addPurchaseView")
 	public String addPurchaseView(@RequestParam("prodNo") int prodNo,
-																Map<String, Product> map) throws Exception{
+									Map<String, Product> map) throws Exception{
 		
 		System.out.println("addPurchaseView");
 		
@@ -61,16 +61,20 @@ public class PurchaseController {
 	
 	@RequestMapping("addPurchase")
 	public String addPurchase(@ModelAttribute("purchase") Purchase purchase,
-														@RequestParam("prodNo") int prodNo,
-														@RequestParam("buyerId") String buyerId) throws Exception{
+								@RequestParam("prodNo") int prodNo,
+								@RequestParam("buyerId") String buyerId) throws Exception{
 		
 		System.out.println("addPurchase");
 		
 		User user = new User();
 		Product product = new Product();
 		
+		product = productService.getProduct(prodNo);
+		product.setAmount(product.getAmount() - purchase.getTranAmount());
+		productService.minusAmount(product);
+		
 		user.setUserId(buyerId);
-		product.setProdNo(prodNo);
+		//product.setProdNo(prodNo);
 		
 		purchase.setBuyer(user);
 		purchase.setPurchaseProd(product);
